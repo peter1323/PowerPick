@@ -21,6 +21,22 @@ const RAZAS = {
   'Martian': 'Marciano', 'Zombie': 'Zombi', 'Amazon': 'Amazona', 'Gorilla': 'Gorila',
 };
 
+// En unos 50 personajes la base trae un alias en el campo de editorial
+// (por ejemplo "Superman Prime One-Million" en Superman). Se corrige aquí:
+// todo lo que no sea una editorial real es de DC si el personaje está en
+// esta lista, y de Marvel en caso contrario.
+const EDITORIALES_REALES = /Comics|George Lucas|NBC|Star Trek|SyFy|ABC|IDW|Shueisha|Sony|Wildstorm|South Park|Universal|Rowling|Titan Books|Rebellion|Microsoft|Tolkien/;
+const ALIAS_DE_DC = ['Batgirl', 'Batgirl VI', 'Batman II', 'Flash II', 'Flash III', 'Flash IV',
+  'Huntress', 'Impulse', 'Misfit', 'Nightwing', 'Oracle', 'Red Hood', 'Red Robin', 'Robin',
+  'Robin II', 'Robin III', 'Spectre', 'Superman'];
+
+function editorial(p) {
+  const e = texto(p.biography.publisher);
+  if (!e) return 'Otra';
+  if (EDITORIALES_REALES.test(e)) return e;
+  return ALIAS_DE_DC.includes(p.name) ? 'DC Comics' : 'Marvel Comics';
+}
+
 // Devuelve el texto limpio o undefined si viene vacío ("", "-", "null").
 function texto(valor) {
   const t = String(valor || '').trim();
@@ -38,7 +54,7 @@ const heroes = todos
     id: p.id,
     nombre: p.name,
     imagen: p.images.md,
-    editorial: (p.biography.publisher || '').replace('null', '') || 'Otra',
+    editorial: editorial(p),
     alineacion: p.biography.alignment === 'good' ? 'bueno'
       : p.biography.alignment === 'bad' ? 'malo' : 'neutral',
     // orden: inteligencia, fuerza, velocidad, resistencia, poder, combate
