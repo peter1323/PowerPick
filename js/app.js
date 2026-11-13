@@ -25,6 +25,10 @@ function pantallaMenu() {
   menu.append(
     opcionMenu('Más o menos', 'Adivina si el siguiente personaje tiene más o menos. Récord: ' +
       (leerDatos().record || 0), 'boton-azul', () => jugarMasMenos()),
+    opcionMenu('Draft · 1 jugador', '5 rondas: elige uno de cada tres y forma el mejor equipo.',
+      'boton-verde', () => jugarDraft(1)),
+    opcionMenu('Draft · 2 jugadores', 'Pasad el móvil: gana el equipo con más puntos.',
+      'boton-naranja', () => jugarDraft(2)),
   );
   mostrar(menu);
 }

@@ -22,6 +22,21 @@ function nombreEditorial(heroe) {
 
 const TEXTO_ALINEACION = { bueno: 'Héroe', malo: 'Villano', neutral: 'Neutral' };
 
+function crearFoto(heroe) {
+  const img = el('img');
+  img.src = heroe.imagen;
+  img.alt = heroe.nombre;
+  img.onerror = () => { img.onerror = null; img.src = SIN_FOTO; };
+  return img;
+}
+
+// Foto pequeña con el nombre debajo. Sin personaje, un hueco vacío.
+function crearMiniatura(heroe) {
+  const mini = el('figure', 'miniatura' + (heroe ? '' : ' miniatura-vacia'));
+  if (heroe) mini.append(crearFoto(heroe), el('figcaption', '', heroe.nombre));
+  return mini;
+}
+
 // Sin opciones enseña los seis atributos. Con { atributo } es una carta pequeña
 // con un solo atributo en grande; con { oculto: true } el número sale como "?".
 function crearCarta(heroe, opciones = {}) {
@@ -29,12 +44,8 @@ function crearCarta(heroe, opciones = {}) {
   const carta = el('article', 'carta vineta' + (mini ? ' carta-mini' : ''));
 
   const foto = el('div', 'carta-foto');
-  const img = el('img');
-  img.src = heroe.imagen;
-  img.alt = heroe.nombre;
-  img.onerror = () => { img.onerror = null; img.src = SIN_FOTO; };
   foto.append(
-    img,
+    crearFoto(heroe),
     el('span', 'sello sello-editorial', nombreEditorial(heroe)),
     el('span', 'sello sello-' + heroe.alineacion, TEXTO_ALINEACION[heroe.alineacion]),
   );

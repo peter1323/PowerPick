@@ -226,3 +226,54 @@ main {
 @media (prefers-reduced-motion: reduce) { .onomatopeya { animation: desvanecer .3s 1s forwards; } }
 
 .carta-ficha { margin: 0; padding: 12px 12px 0; font-size: .82rem; line-height: 1.35; text-align: center; overflow-wrap: anywhere; }
+
+/* ---------- Draft ---------- */
+
+.boton-naranja { background: var(--naranja); }
+.jugador-0 { background: var(--azul); }
+.jugador-1 { background: var(--naranja); }
+.ganador { background: var(--verde); font-size: 1.7rem; transform: rotate(-2deg); }
+
+.trio { width: 100%; display: grid; gap: 18px; justify-items: center; }
+.boton-fichar { display: block; width: calc(100% - 24px); margin: 0 12px 14px; }
+
+@media (min-width: 720px) {
+  .trio { grid-template-columns: repeat(3, 1fr); }
+  /* Las tres cartas miden lo mismo y el botón queda siempre abajo. */
+  .trio .carta { display: flex; flex-direction: column; }
+  .trio .boton-fichar { margin-top: auto; }
+}
+
+/* En pantallas estrechas la carta se tumba: foto a la izquierda, datos a la derecha. */
+@media (max-width: 719px) {
+  .trio .carta { max-width: 460px; display: grid; grid-template-columns: 36% 1fr; }
+  .trio .carta > * { grid-column: 2; min-width: 0; }
+  .trio .carta-foto { grid-column: 1; grid-row: 1 / span 4; aspect-ratio: auto; border-bottom: 0; border-right: 4px solid var(--tinta); }
+  .trio .carta-foto img { position: absolute; inset: 0; }
+  .trio .sello { font-size: .7rem; padding: 2px 5px; border-width: 2px; }
+  .trio .sello-bueno, .trio .sello-malo, .trio .sello-neutral { right: auto; left: 8px; top: 32px; }
+  .trio .carta-nombre { margin: 8px 8px 0; font-size: 1.15rem; padding: 4px 6px; border-width: 3px; }
+  .trio .carta-ficha { padding: 6px 8px 0; font-size: .75rem; }
+  .trio .carta-stats { padding: 8px; gap: 4px; }
+  .trio .stat { font-size: .78rem; grid-template-columns: 5.6em 1fr 1.8em; gap: 5px; }
+  .trio .barra { height: 11px; border-width: 2px; }
+  .trio .boton-fichar { width: calc(100% - 16px); margin: 0 8px 10px; padding: 8px; font-size: 1.2rem; }
+}
+
+.equipo { width: 100%; max-width: 460px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.miniatura { margin: 0; min-width: 0; }
+.miniatura img, .miniatura-vacia::before {
+  display: block; width: 100%; aspect-ratio: 1; object-fit: cover; object-position: top;
+  border: 3px solid var(--tinta); background: var(--papel);
+}
+.miniatura-vacia::before { content: ''; background: rgba(255, 255, 255, .45); border-style: dashed; }
+.miniatura figcaption { margin-top: 3px; font-size: .68rem; font-weight: bold; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+
+.resultados { width: 100%; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); justify-items: center; align-items: start; }
+.resultado { width: 100%; max-width: 460px; padding: 14px; display: grid; gap: 10px; }
+.resultado-titulo { margin: 0; font: 400 1.5rem/1 var(--titulos); letter-spacing: 1px; text-transform: uppercase; }
+.resultado-total { margin: 0; padding: 6px; text-align: center; font: 400 2.2rem/1 var(--titulos); background: var(--amarillo); border: 3px solid var(--tinta); }
+.desglose { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-weight: bold; }
+.desglose dd { margin: 0; text-align: right; font: 400 1.2rem/1 var(--titulos); }
+.detalles { margin: 0; padding-left: 18px; font-size: .85rem; line-height: 1.4; }
+.detalles:empty { display: none; }
