@@ -1,7 +1,19 @@
 /* PowerPick: estética de cómic con viñetas, tramas de puntos y colores planos. */
 
+/* Modo oscuro: cambian el fondo, el papel y el texto; los colores planos se quedan. */
+:root[data-tema="oscuro"] {
+  --texto-c: #f5f1e3;
+  --fondo: #3b2a7d;
+  --trama: rgba(0, 0, 0, .28);
+  --papel: #1d1d2b;
+  color-scheme: dark;
+}
+
 :root {
-  --tinta: #111;
+  --tinta: #111;      /* bordes, sombras y texto sobre colores planos */
+  --texto-c: #111;    /* texto sobre el fondo y sobre el papel */
+  --fondo: #ffd60a;
+  --trama: rgba(0, 0, 0, .14);
   --papel: #fffdf5;
   --amarillo: #ffd60a;
   --rojo: #e63946;
@@ -21,9 +33,9 @@ body {
   display: flex;
   flex-direction: column;
   font-family: var(--texto);
-  color: var(--tinta);
+  color: var(--texto-c);
   /* trama de puntos */
-  background: var(--amarillo) radial-gradient(rgba(0, 0, 0, .14) 22%, transparent 24%) 0 0 / 14px 14px;
+  background: var(--fondo) radial-gradient(var(--trama) 22%, transparent 24%) 0 0 / 14px 14px;
 }
 
 /* ---------- Cabecera y pie ---------- */
@@ -56,7 +68,7 @@ body {
   padding: 6px 8px;
   border: 3px solid var(--tinta);
   background: var(--papel);
-  color: var(--tinta);
+  color: var(--texto-c);
   box-shadow: 3px 3px 0 var(--tinta);
 }
 
@@ -97,7 +109,7 @@ main {
   letter-spacing: 1px;
   text-transform: uppercase;
   padding: 12px 22px;
-  color: var(--tinta);
+  color: var(--texto-c);
   background: var(--papel);
   border: 4px solid var(--tinta);
   box-shadow: 5px 5px 0 var(--tinta);
@@ -267,7 +279,7 @@ main {
   border: 3px solid var(--tinta); background: var(--papel);
 }
 .miniatura-vacia::before { content: ''; background: rgba(255, 255, 255, .45); border-style: dashed; }
-.miniatura figcaption { margin-top: 3px; font-size: .68rem; font-weight: bold; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+.miniatura figcaption { margin-top: 3px; font-size: .62rem; font-weight: bold; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
 
 .resultados { width: 100%; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); justify-items: center; align-items: start; }
 .resultado { width: 100%; max-width: 460px; padding: 14px; display: grid; gap: 10px; }
@@ -277,3 +289,19 @@ main {
 .desglose dd { margin: 0; text-align: right; font: 400 1.2rem/1 var(--titulos); }
 .detalles { margin: 0; padding-left: 18px; font-size: .85rem; line-height: 1.4; }
 .detalles:empty { display: none; }
+
+/* El texto sobre colores planos es siempre oscuro, también en modo oscuro. */
+.boton-azul, .boton-verde, .boton-naranja, .boton-amarillo,
+.marcador, .carta-nombre, .resultado-total, .dato-valor, .sello-bueno, .sello-neutral { color: var(--tinta); }
+.boton-amarillo { background: var(--amarillo); }
+
+.boton-tema { font-size: 1rem; padding: 6px 10px; border-width: 3px; box-shadow: 3px 3px 0 var(--tinta); margin-left: auto; }
+.boton-tema:hover { box-shadow: 3px 3px 0 var(--tinta); transform: none; }
+.boton-tarjeta { font-size: 1.15rem; padding: 10px; }
+
+/* ---------- Cómo se puntúa ---------- */
+
+.ayuda { width: 100%; max-width: 460px; padding: 10px 14px; }
+.ayuda summary { cursor: pointer; font: 400 1.2rem/1.2 var(--titulos); letter-spacing: 1px; text-transform: uppercase; }
+.reglas { margin: 10px 0 2px; display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: .88rem; line-height: 1.35; }
+.reglas dd { margin: 0; text-align: right; white-space: nowrap; font: 400 1.1rem/1.2 var(--titulos); }

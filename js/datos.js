@@ -49,3 +49,38 @@ function heroesFiltrados() {
 function alAzar(lista, aleatorio = Math.random) {
   return lista[Math.floor(aleatorio() * lista.length)];
 }
+
+function borrarDatos() {
+  try {
+    localStorage.removeItem(CLAVE);
+  } catch {
+    // Sin almacenamiento no hay nada que borrar.
+  }
+}
+
+// Tema: el elegido con el botón o, si no se ha elegido, el del sistema.
+function temaActual() {
+  return leerDatos().tema || (matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro');
+}
+// Se aplica nada más cargar para que la página no parpadee en claro.
+document.documentElement.dataset.tema = temaActual();
+
+// Fecha local de hoy, por ejemplo "2026-03-09".
+function fechaDeHoy() {
+  const hoy = new Date();
+  const dos = n => String(n).padStart(2, '0');
+  return hoy.getFullYear() + '-' + dos(hoy.getMonth() + 1) + '-' + dos(hoy.getDate());
+}
+
+// Generador de números al azar que siempre da la misma secuencia para el
+// mismo texto (mulberry32 con semilla FNV-1a). Sirve para el reto diario.
+function generadorAleatorio(texto) {
+  let a = 2166136261;
+  for (const letra of texto) a = Math.imul(a ^ letra.charCodeAt(0), 16777619);
+  return () => {
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}

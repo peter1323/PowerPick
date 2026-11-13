@@ -3,6 +3,14 @@
 const RONDAS = 5;
 const OPCIONES = 3;
 
+// Reglas de puntuación. Se usan para calcular y para explicarlas en pantalla.
+const REGLAS = {
+  mediaCompleto: 60, bonusCompleto: 200,
+  mediaEquilibrado: 50, bonusEquilibrado: 100,
+  mediaDebil: 35, penalizacionDebil: 75,
+  bonusEditorial: 250, bonusVillanos: 200, bonusHeroes: 150,
+};
+
 // Puntuación de un equipo. Devuelve el total y el desglose para enseñarlo.
 function puntuar(equipo) {
   const base = equipo.reduce((suma, h) => suma + h.stats.reduce((a, b) => a + b, 0), 0);
@@ -12,35 +20,60 @@ function puntuar(equipo) {
   const minima = Math.min(...medias);
   const detalles = [];
   let equilibrio = 0;
-  if (minima >= 60) {
-    equilibrio += 200;
-    detalles.push('Equipo muy completo, los seis atributos con media de 60 o más: +200');
-  } else if (minima >= 50) {
-    equilibrio += 100;
-    detalles.push('Equipo equilibrado, los seis atributos con media de 50 o más: +100');
+  if (minima >= REGLAS.mediaCompleto) {
+    equilibrio += REGLAS.bonusCompleto;
+    detalles.push('Equipo muy completo, los seis atributos con media de ' + REGLAS.mediaCompleto +
+      ' o más: +' + REGLAS.bonusCompleto);
+  } else if (minima >= REGLAS.mediaEquilibrado) {
+    equilibrio += REGLAS.bonusEquilibrado;
+    detalles.push('Equipo equilibrado, los seis atributos con media de ' + REGLAS.mediaEquilibrado +
+      ' o más: +' + REGLAS.bonusEquilibrado);
   }
   medias.forEach((media, i) => {
-    if (media < 35) {
-      equilibrio -= 75;
-      detalles.push('Punto débil, ' + ATRIBUTOS[i].toLowerCase() + ' con media de ' + Math.round(media) + ': −75');
+    if (media < REGLAS.mediaDebil) {
+      equilibrio -= REGLAS.penalizacionDebil;
+      detalles.push('Punto débil, ' + ATRIBUTOS[i].toLowerCase() + ' con media de ' + Math.round(media) +
+        ': −' + REGLAS.penalizacionDebil);
     }
   });
 
   let sinergias = 0;
   if (equipo.every(h => h.editorial === equipo[0].editorial) && equipo[0].editorial !== 'Otra') {
-    sinergias += 250;
-    detalles.push('Todos de ' + nombreEditorial(equipo[0]) + ': +250');
+    sinergias += REGLAS.bonusEditorial;
+    detalles.push('Todos de ' + nombreEditorial(equipo[0]) + ': +' + REGLAS.bonusEditorial);
   }
   if (equipo.every(h => h.alineacion === 'malo')) {
-    sinergias += 200;
-    detalles.push('Todos villanos: +200');
+    sinergias += REGLAS.bonusVillanos;
+    detalles.push('Todos villanos: +' + REGLAS.bonusVillanos);
   }
   if (equipo.every(h => h.alineacion === 'bueno')) {
-    sinergias += 150;
-    detalles.push('Todos héroes: +150');
+    sinergias += REGLAS.bonusHeroes;
+    detalles.push('Todos héroes: +' + REGLAS.bonusHeroes);
   }
 
   return { base, equilibrio, sinergias, total: base + equilibrio + sinergias, detalles };
+}
+
+// Desplegable "Cómo se puntúa" con las reglas.
+function ayudaPuntuacion() {
+  const ayuda = el('details', 'ayuda vineta');
+  ayuda.append(el('summary', '', 'Cómo se puntúa'));
+  const tabla = el('dl', 'reglas');
+  [
+    ['Base', 'La suma de los seis atributos de tus cinco personajes.', 'hasta 3000'],
+    ['Equilibrio', 'Los seis atributos con media de equipo de ' + REGLAS.mediaCompleto + ' o más.', '+' + REGLAS.bonusCompleto],
+    ['Equilibrio', 'Los seis con media de ' + REGLAS.mediaEquilibrado + ' o más, si no llega a ' + REGLAS.mediaCompleto + '.', '+' + REGLAS.bonusEquilibrado],
+    ['Equilibrio', 'Por cada atributo con media por debajo de ' + REGLAS.mediaDebil + '.', '−' + REGLAS.penalizacionDebil],
+    ['Sinergia', 'Todos de la misma editorial.', '+' + REGLAS.bonusEditorial],
+    ['Sinergia', 'Todos villanos.', '+' + REGLAS.bonusVillanos],
+    ['Sinergia', 'Todos héroes.', '+' + REGLAS.bonusHeroes],
+  ].forEach(([tipo, regla, puntos]) => {
+    const dt = el('dt');
+    dt.append(el('strong', '', tipo + ': '), regla);
+    tabla.append(dt, el('dd', '', puntos));
+  });
+  ayuda.append(tabla);
+  return ayuda;
 }
 
 // Fila con las fotos pequeñas del equipo; los huecos sin fichar salen vacíos.
@@ -68,6 +101,7 @@ function panelResultado(titulo, equipo, puntos) {
     el('p', 'resultado-total', puntos.total + ' puntos'),
     tabla,
     detalles,
+    boton('Descargar tarjeta', 'boton-amarillo boton-tarjeta', () => descargarTarjeta(titulo, equipo, puntos)),
   );
   return panel;
 }
@@ -77,7 +111,7 @@ function jugarDraft(numJugadores) {
   const equipos = Array.from({ length: numJugadores }, () => []);
   let turno = 0;
 
-  const nombreJugador = j => (numJugadores === 1 ? 'Tu equipo' : 'Jugador ' + (j + 1));
+  const nombreJugador = j => (numJugadores === 1 ? 'Mi equipo' : 'Jugador ' + (j + 1));
 
   // Saca tres personajes de la lista: ni el fichado ni los descartados vuelven.
   function sacarOpciones() {
@@ -107,7 +141,7 @@ function jugarDraft(numJugadores) {
     });
 
     mostrar(titulo, el('p', 'nota', 'Ficha a uno. Los otros dos no volverán a salir.'), trio,
-      el('p', 'nota', nombreJugador(jugador)), filaEquipo(equipos[jugador]));
+      el('p', 'nota', nombreJugador(jugador)), filaEquipo(equipos[jugador]), ayudaPuntuacion());
     scrollTo(0, 0);
   }
 
@@ -139,7 +173,7 @@ function jugarDraft(numJugadores) {
       boton('Otra vez', 'boton-azul', () => jugarDraft(numJugadores)),
       boton('Menú', '', pantallaMenu),
     );
-    nodos.push(paneles, botones);
+    nodos.push(paneles, botones, ayudaPuntuacion());
     mostrar(...nodos);
     scrollTo(0, 0);
   }

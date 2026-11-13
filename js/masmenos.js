@@ -34,8 +34,12 @@ function crearOnomatopeya(tipo) {
   return nodo;
 }
 
-function jugarMasMenos(aleatorio = Math.random) {
-  const lista = heroesFiltrados();
+// Con diario = true es el reto diario: usa todos los personajes y una secuencia
+// que sale de la fecha, así que es igual para todo el mundo ese día.
+function jugarMasMenos(diario = false) {
+  const fecha = fechaDeHoy();
+  const aleatorio = diario ? generadorAleatorio('powerpick-' + fecha) : Math.random;
+  const lista = diario ? HEROES : heroesFiltrados();
   let disponibles = [];
   let racha = 0;
   let atributo = -1;
@@ -60,7 +64,7 @@ function jugarMasMenos(aleatorio = Math.random) {
 
   // El récord se guarda al terminar; mientras tanto se enseña el mayor de los dos.
   function textoMarcador() {
-    return 'Racha: ' + racha + ' · Récord: ' + Math.max(racha, leerDatos().record || 0);
+    return (diario ? 'Reto diario · ' : '') + 'Racha: ' + racha + ' · Récord: ' + Math.max(racha, leerDatos().record || 0);
   }
 
   function ronda() {
@@ -96,6 +100,7 @@ function jugarMasMenos(aleatorio = Math.random) {
           return;
         }
         racha++;
+        if (diario) guardarDatos({ diario: { fecha, racha } });
         marcador.textContent = textoMarcador();
         setTimeout(() => {
           if (!duelo.isConnected) return;
@@ -114,16 +119,15 @@ function jugarMasMenos(aleatorio = Math.random) {
       partidas: (datos.partidas || 0) + 1,
     });
 
-    pregunta.textContent = esRecord
-      ? '¡Nuevo récord! Racha de ' + racha + '.'
-      : 'Fin de la partida. Racha de ' + racha + '.';
-    botones.replaceChildren(
-      boton('Otra vez', 'boton-azul', () => jugarMasMenos()),
-      boton('Menú', '', pantallaMenu),
-    );
+    pregunta.textContent = (esRecord ? '¡Nuevo récord! ' : 'Fin de la partida. ') + 'Racha de ' + racha + '.' +
+      (diario ? ' Mañana hay otro reto.' : '');
+    botones.replaceChildren(boton('Menú', 'boton-azul', pantallaMenu));
+    if (!diario) botones.prepend(boton('Otra vez', 'boton-azul', () => jugarMasMenos()));
     botones.querySelector('button').focus();
   }
 
+  // El intento del día se gasta al empezar, no al terminar.
+  if (diario) guardarDatos({ diario: { fecha, racha: 0 } });
   referencia = sacar();
   ronda();
 }

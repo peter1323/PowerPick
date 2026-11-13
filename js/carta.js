@@ -24,6 +24,8 @@ const TEXTO_ALINEACION = { bueno: 'Héroe', malo: 'Villano', neutral: 'Neutral' 
 
 function crearFoto(heroe) {
   const img = el('img');
+  // Hace falta para poder dibujar la foto en la tarjeta descargable.
+  img.crossOrigin = 'anonymous';
   img.src = heroe.imagen;
   img.alt = heroe.nombre;
   img.onerror = () => { img.onerror = null; img.src = SIN_FOTO; };

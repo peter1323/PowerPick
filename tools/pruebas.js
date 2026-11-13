@@ -4,9 +4,12 @@ const fs = require('fs');
 const path = require('path');
 
 const leer = f => fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8');
-const { acierta, puntuar } = new Function(
+const { acierta, puntuar, generadorAleatorio } = new Function(
+  // Lo mínimo del navegador que usa datos.js al cargarse.
+  'const document = { documentElement: { dataset: {} } }, localStorage = { getItem: () => null },' +
+  ' matchMedia = () => ({ matches: false });' +
   leer('datos.js') + leer('carta.js') + leer('masmenos.js') + leer('draft.js') +
-  '; return { acierta, puntuar };')();
+  '; return { acierta, puntuar, generadorAleatorio };')();
 
 // Más o menos: el empate cuenta como acierto.
 assert(acierta(50, 50, true) && acierta(50, 50, false));
@@ -30,5 +33,11 @@ assert.deepStrictEqual([p.equilibrio, p.sinergias, p.detalles.length], [-150, 0,
 
 // "Otra" agrupa editoriales desconocidas: no cuenta como misma editorial.
 assert.strictEqual(puntuar(cinco(heroe([40, 40, 40, 40, 40, 40], 'Otra', 'neutral'))).sinergias, 0);
+
+// Reto diario: misma fecha, misma secuencia; otra fecha, otra distinta.
+const secuencia = texto => { const g = generadorAleatorio(texto); return [g(), g(), g(), g()]; };
+assert.deepStrictEqual(secuencia('powerpick-2026-01-01'), secuencia('powerpick-2026-01-01'));
+assert.notDeepStrictEqual(secuencia('powerpick-2026-01-01'), secuencia('powerpick-2026-01-02'));
+assert(secuencia('x').every(n => n >= 0 && n < 1));
 
 console.log('Todo correcto');
