@@ -50,6 +50,13 @@ function crearCarta(heroe, opciones = {}) {
     return carta;
   }
 
+  const ficha = [
+    heroe.real,
+    heroe.raza,
+    heroe.debut && 'Primera aparición: ' + heroe.debut,
+  ].filter(Boolean).join(' · ');
+  if (ficha) carta.append(el('p', 'carta-ficha', ficha));
+
   const stats = el('ul', 'carta-stats');
   heroe.stats.forEach((valor, i) => {
     const fila = el('li', 'stat stat-' + i);

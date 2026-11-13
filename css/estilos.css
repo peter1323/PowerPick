@@ -224,3 +224,5 @@ main {
 @keyframes estallido { from { transform: scale(0) rotate(-30deg); } to { transform: scale(1) rotate(0); } }
 @keyframes desvanecer { to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .onomatopeya { animation: desvanecer .3s 1s forwards; } }
+
+.carta-ficha { margin: 0; padding: 12px 12px 0; font-size: .82rem; line-height: 1.35; text-align: center; overflow-wrap: anywhere; }
