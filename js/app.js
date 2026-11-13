@@ -105,3 +105,8 @@ selectorFiltro.onchange = () => {
 cargarHeroes()
   .then(pantallaMenu)
   .catch(() => mostrar(el('p', 'vineta aviso', 'No se han podido cargar los personajes. Recarga la página.')));
+
+// Permite instalar la app y jugar sin internet.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
