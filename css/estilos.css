@@ -1,0 +1,169 @@
+/* PowerPick: estética de cómic con viñetas, tramas de puntos y colores planos. */
+
+:root {
+  --tinta: #111;
+  --papel: #fffdf5;
+  --amarillo: #ffd60a;
+  --rojo: #e63946;
+  --azul: #2ec4f1;
+  --verde: #2dc653;
+  --morado: #8e5bd6;
+  --naranja: #ff8c1a;
+  --titulos: Impact, Haettenschweiler, 'Arial Narrow Bold', 'Arial Black', sans-serif;
+  --texto: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--texto);
+  color: var(--tinta);
+  /* trama de puntos */
+  background: var(--amarillo) radial-gradient(rgba(0, 0, 0, .14) 22%, transparent 24%) 0 0 / 14px 14px;
+}
+
+/* ---------- Cabecera y pie ---------- */
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 16px;
+  background: var(--rojo);
+  border-bottom: 4px solid var(--tinta);
+}
+
+.logo {
+  margin: 0;
+  font: 400 2.2rem/1 var(--titulos);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--amarillo);
+  text-shadow: 3px 3px 0 var(--tinta);
+  transform: rotate(-2deg);
+}
+.logo span { color: #fff; }
+
+.filtro { display: flex; align-items: center; gap: 8px; font-weight: bold; color: #fff; }
+.filtro select {
+  font: bold 1rem var(--texto);
+  padding: 6px 8px;
+  border: 3px solid var(--tinta);
+  background: var(--papel);
+  color: var(--tinta);
+  box-shadow: 3px 3px 0 var(--tinta);
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.pie {
+  padding: 12px 16px;
+  font-size: .8rem;
+  text-align: center;
+  background: var(--tinta);
+  color: #fff;
+}
+.pie a { color: var(--amarillo); }
+
+/* ---------- Piezas comunes ---------- */
+
+.vineta {
+  background: var(--papel);
+  border: 4px solid var(--tinta);
+  box-shadow: 6px 6px 0 var(--tinta);
+}
+
+.aviso { padding: 16px; font-weight: bold; }
+.nota { margin: 0; font-weight: bold; }
+
+.boton {
+  font: 400 1.4rem/1 var(--titulos);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 4px solid var(--tinta);
+  box-shadow: 5px 5px 0 var(--tinta);
+  cursor: pointer;
+}
+.boton:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--tinta); }
+.boton:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--tinta); }
+.boton:focus-visible, select:focus-visible { outline: 4px solid #fff; outline-offset: 2px; }
+.boton-azul { background: var(--azul); }
+.boton-rojo { background: var(--rojo); color: #fff; }
+.boton-verde { background: var(--verde); }
+
+/* ---------- Carta de personaje ---------- */
+
+.carta { width: 100%; max-width: 300px; }
+
+.carta-foto {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-bottom: 4px solid var(--tinta);
+  background: var(--azul) radial-gradient(rgba(0, 0, 0, .2) 22%, transparent 24%) 0 0 / 10px 10px;
+  overflow: hidden;
+}
+.carta-foto img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+.sello {
+  position: absolute;
+  top: 8px;
+  padding: 3px 8px;
+  font: 400 .95rem/1.1 var(--titulos);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 3px solid var(--tinta);
+  background: var(--papel);
+}
+.sello-editorial { left: 8px; transform: rotate(-4deg); }
+.sello-bueno, .sello-malo, .sello-neutral { right: 8px; transform: rotate(4deg); }
+.sello-bueno { background: var(--azul); }
+.sello-malo { background: var(--morado); color: #fff; }
+.sello-neutral { background: #ccc; }
+
+.carta-nombre {
+  margin: -22px 10px 0;
+  position: relative;
+  padding: 6px 10px;
+  font: 400 1.5rem/1.1 var(--titulos);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  background: var(--amarillo);
+  border: 4px solid var(--tinta);
+  transform: rotate(-1.5deg);
+  overflow-wrap: anywhere;
+}
+
+.carta-stats { list-style: none; margin: 0; padding: 12px; display: grid; gap: 6px; }
+
+.stat { display: grid; grid-template-columns: 6.2em 1fr 2.2em; align-items: center; gap: 8px; font-size: .9rem; }
+.stat-nombre { font-weight: bold; }
+.stat-valor { text-align: right; font: 400 1.15rem/1 var(--titulos); }
+
+.barra { height: 14px; border: 3px solid var(--tinta); background: #fff; }
+.barra i { display: block; height: 100%; background: var(--rojo); }
+.stat-0 .barra i { background: var(--azul); }
+.stat-1 .barra i { background: var(--rojo); }
+.stat-2 .barra i { background: var(--amarillo); }
+.stat-3 .barra i { background: var(--verde); }
+.stat-4 .barra i { background: var(--morado); }
+.stat-5 .barra i { background: var(--naranja); }

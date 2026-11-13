@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PowerPick</title>
+  <meta name="description" content="Juego de superhéroes: Más o menos y Draft. App de fan no oficial.">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1 class="logo">Power<span>Pick</span></h1>
+    <label class="filtro">
+      <span>Personajes</span>
+      <select id="filtro">
+        <option value="todos">Todos</option>
+        <option value="marvel">Solo Marvel</option>
+        <option value="dc">Solo DC</option>
+        <option value="villanos">Solo villanos</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="pantalla" aria-live="polite"></main>
+
+  <footer class="pie">
+    App de fan no oficial, sin relación con Marvel, DC ni ninguna otra editorial.
+    Los personajes pertenecen a sus respectivos dueños.
+    Datos: <a href="https://github.com/akabab/superhero-api" rel="noopener">akabab/superhero-api</a>.
+  </footer>
+
+  <script src="js/datos.js"></script>
+  <script src="js/carta.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
