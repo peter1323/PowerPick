@@ -14,14 +14,22 @@ function boton(texto, clase, alPulsar) {
   return b;
 }
 
-// Pantalla provisional: enseña una carta al azar del filtro elegido.
-function pantallaCarta() {
-  const heroe = alAzar(heroesFiltrados());
-  const cuenta = el('p', 'nota', heroesFiltrados().length + ' personajes con este filtro');
-  mostrar(crearCarta(heroe), boton('Otro personaje', 'boton-azul', pantallaCarta), cuenta);
+function opcionMenu(titulo, descripcion, clase, alPulsar) {
+  const b = boton('', 'opcion ' + clase, alPulsar);
+  b.append(el('strong', '', titulo), el('span', '', descripcion));
+  return b;
 }
 
-let pantallaInicial = pantallaCarta;
+function pantallaMenu() {
+  const menu = el('div', 'menu');
+  menu.append(
+    opcionMenu('Más o menos', 'Adivina si el siguiente personaje tiene más o menos. Récord: ' +
+      (leerDatos().record || 0), 'boton-azul', () => jugarMasMenos()),
+  );
+  mostrar(menu);
+}
+
+const pantallaInicial = pantallaMenu;
 
 selectorFiltro.value = filtroActual();
 selectorFiltro.onchange = () => {

@@ -22,20 +22,33 @@ function nombreEditorial(heroe) {
 
 const TEXTO_ALINEACION = { bueno: 'Héroe', malo: 'Villano', neutral: 'Neutral' };
 
-function crearCarta(heroe) {
-  const carta = el('article', 'carta vineta');
+// Sin opciones enseña los seis atributos. Con { atributo } es una carta pequeña
+// con un solo atributo en grande; con { oculto: true } el número sale como "?".
+function crearCarta(heroe, opciones = {}) {
+  const mini = opciones.atributo !== undefined;
+  const carta = el('article', 'carta vineta' + (mini ? ' carta-mini' : ''));
 
   const foto = el('div', 'carta-foto');
   const img = el('img');
   img.src = heroe.imagen;
   img.alt = heroe.nombre;
-  img.loading = 'lazy';
   img.onerror = () => { img.onerror = null; img.src = SIN_FOTO; };
   foto.append(
     img,
     el('span', 'sello sello-editorial', nombreEditorial(heroe)),
     el('span', 'sello sello-' + heroe.alineacion, TEXTO_ALINEACION[heroe.alineacion]),
   );
+  carta.append(foto, el('h2', 'carta-nombre', heroe.nombre));
+
+  if (mini) {
+    const dato = el('p', 'dato stat-' + opciones.atributo);
+    dato.append(
+      el('span', 'dato-nombre', ATRIBUTOS[opciones.atributo]),
+      el('b', 'dato-valor', opciones.oculto ? '?' : heroe.stats[opciones.atributo]),
+    );
+    carta.append(dato);
+    return carta;
+  }
 
   const stats = el('ul', 'carta-stats');
   heroe.stats.forEach((valor, i) => {
@@ -47,7 +60,6 @@ function crearCarta(heroe) {
     fila.append(el('span', 'stat-nombre', ATRIBUTOS[i]), barra, el('b', 'stat-valor', valor));
     stats.append(fila);
   });
-
-  carta.append(foto, el('h2', 'carta-nombre', heroe.nombre), stats);
+  carta.append(stats);
   return carta;
 }

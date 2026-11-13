@@ -167,3 +167,60 @@ main {
 .stat-3 .barra i { background: var(--verde); }
 .stat-4 .barra i { background: var(--morado); }
 .stat-5 .barra i { background: var(--naranja); }
+
+.logo a { color: inherit; text-decoration: none; }
+
+/* ---------- Menú ---------- */
+
+.menu { width: 100%; max-width: 560px; display: grid; gap: 18px; }
+.opcion { display: grid; gap: 6px; text-align: left; padding: 18px 20px; }
+.opcion strong { font-weight: 400; font-size: 2rem; }
+.opcion span { font: bold 1rem/1.3 var(--texto); text-transform: none; letter-spacing: 0; }
+
+/* ---------- Más o menos ---------- */
+
+.marcador, .pregunta { margin: 0; padding: 8px 14px; font-weight: bold; text-align: center; }
+.marcador { font: 400 1.3rem/1.1 var(--titulos); letter-spacing: 1px; text-transform: uppercase; background: var(--amarillo); }
+.pregunta { max-width: 560px; }
+
+.duelo { position: relative; width: 100%; max-width: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.boton:disabled { opacity: .5; cursor: default; }
+
+.carta-mini { max-width: none; }
+.carta-mini .sello { font-size: .75rem; padding: 2px 5px; border-width: 2px; }
+.carta-mini .sello-bueno, .carta-mini .sello-malo, .carta-mini .sello-neutral { right: auto; left: 8px; top: 32px; }
+.carta-mini .carta-nombre { margin: -18px 6px 0; padding: 4px 6px; font-size: 1.1rem; border-width: 3px; }
+
+.dato { margin: 0; padding: 10px 6px 12px; display: grid; justify-items: center; gap: 2px; }
+.dato-nombre { font-weight: bold; text-transform: uppercase; font-size: .85rem; letter-spacing: 1px; }
+.dato-valor { font: 400 3.2rem/1 var(--titulos); min-width: 2.2ch; text-align: center; padding: 0 8px; border: 3px solid var(--tinta); background: var(--amarillo); }
+.dato.stat-0 .dato-valor { background: var(--azul); }
+.dato.stat-1 .dato-valor { background: var(--rojo); color: #fff; }
+.dato.stat-3 .dato-valor { background: var(--verde); }
+.dato.stat-4 .dato-valor { background: var(--morado); color: #fff; }
+.dato.stat-5 .dato-valor { background: var(--naranja); }
+
+/* Onomatopeya: dos cuadrados girados forman la estrella de fondo. */
+.onomatopeya {
+  position: absolute; top: 32%; left: 50%;
+  width: 150px; height: 150px; margin: -75px 0 0 -75px;
+  display: grid; place-items: center;
+  pointer-events: none;
+  animation: estallido .35s cubic-bezier(.2, 1.6, .4, 1) both, desvanecer .3s 1s forwards;
+}
+.onomatopeya::before, .onomatopeya::after {
+  content: ''; position: absolute; inset: 12px;
+  background: var(--amarillo); border: 4px solid var(--tinta);
+}
+.onomatopeya::after { transform: rotate(45deg); }
+.onomatopeya-fallo::before, .onomatopeya-fallo::after { background: var(--rojo); }
+.onomatopeya span {
+  position: relative; z-index: 1;
+  font: 400 2.6rem/1 var(--titulos); letter-spacing: 1px; white-space: nowrap;
+  color: #fff; -webkit-text-stroke: 2px var(--tinta); text-shadow: 4px 4px 0 var(--tinta);
+  transform: rotate(-10deg);
+}
+@keyframes estallido { from { transform: scale(0) rotate(-30deg); } to { transform: scale(1) rotate(0); } }
+@keyframes desvanecer { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .onomatopeya { animation: desvanecer .3s 1s forwards; } }
